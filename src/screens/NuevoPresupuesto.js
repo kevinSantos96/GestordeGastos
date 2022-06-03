@@ -191,7 +191,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   btnDate: {
-    width: '75%',
+    alignItems: 'center',
+    width: '100%',
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: '#FFC23D',
