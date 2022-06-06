@@ -43,9 +43,9 @@ const DetallePresupuesto = ({route}) => {
   }, [gastado]);
 
   function handleGasto(gasto) {
-    const {nombre, cantidad, categoria} = gasto;
+    const {nombre, cantidad, categoria, descripcion} = gasto;
 
-    if ([nombre, cantidad, categoria].includes('')) {
+    if ([nombre, cantidad, categoria, descripcion].includes('')) {
       return Alert.alert('Advertencia', 'Rellene todos los campos', [
         {text: 'Aceptar'},
       ]);
@@ -80,6 +80,7 @@ const DetallePresupuesto = ({route}) => {
     setTotalGastos(totalGastado);
     setPorcentaje(nuevoPorcentaje);
   }, [gastos]);
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={{marginBottom: 50}}>
