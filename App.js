@@ -3,6 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Provider as PaperProvider} from 'react-native-paper';
 //Componentes
 import Inicio from './src/screens/Inicio';
 import NuevoPresupuesto from './src/screens/NuevoPresupuesto';
@@ -12,7 +13,7 @@ import Splash from './src/screens/Splash';
 const Stack = createStackNavigator();
 const App = () => {
   return (
-    <>
+    <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="splash"
@@ -52,7 +53,7 @@ const App = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </PaperProvider>
   );
 };
 
