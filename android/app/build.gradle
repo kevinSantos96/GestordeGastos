@@ -223,10 +223,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('gastosreact.keystore')
-            storePassword 'abc123'
-            keyAlias 'GastosReact'
-            keyPassword 'abc123'
+            storeFile file('gastosapp.keystore')
+            storePassword 'password123'
+            keyAlias 'gastos_app'
+            keyPassword 'password123'
         }
         debug {
             storeFile file('debug.keystore')
@@ -273,6 +273,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation project(':lottie-react-native')
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-html-to-pdf')
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"

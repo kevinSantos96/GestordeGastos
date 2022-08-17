@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -20,6 +20,7 @@ const ExportPDF = ({
   totalGastos,
   disponible,
 }) => {
+  const [load, setLoad] = useState(false);
   const askPermission = () => {
     async function externalWritePermission() {
       try {
@@ -44,6 +45,7 @@ const ExportPDF = ({
     externalWritePermission();
   };
   const createPDF = async () => {
+    setLoad(true);
     let options = {
       html: htmlPDF(
         gastos,
@@ -55,18 +57,24 @@ const ExportPDF = ({
         disponible,
       ),
       fileName: `Gastos ${Date.now()}`,
-      directory: '../Documents',
+      directory: '/docs',
     };
 
-    let file = await RNHTMLtoPDF.convert(options);
+    try {
+      let file = await RNHTMLtoPDF.convert(options);
 
-    Alert.alert('Guardado exitosamente', 'Ruta:' + file.filePath, [
-      {text: 'Aceptar', style: 'ok'},
-    ]);
+      Alert.alert('Guardado exitosamente', 'Ruta:' + file.filePath, [
+        {text: 'Aceptar', style: 'ok'},
+      ]);
+      setLoad(false);
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Error', error.message);
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={load ? styles.load : styles.container}>
       <TouchableOpacity style={styles.btn} onPress={askPermission}>
         <View style={styles.icon}>
           <MaterialCommunityIcons
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
     height: 55,
     position: 'absolute',
     borderRadius: 12,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(250,255,255,0.35)',
     borderColor: '#FF2133',
     borderWidth: 2,
   },
@@ -112,6 +120,12 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     marginLeft: '18%',
+  },
+  load: {
+    alignItems: 'center',
+    marginTop: 65,
+    marginBottom: 20,
+    opacity: 70,
   },
 });
 

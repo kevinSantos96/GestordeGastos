@@ -1,50 +1,95 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Modal,
+} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import {formatMoney} from '../helpers/formatoMoneda';
 import {formatearFecha} from '../helpers/formatDate';
+import FormularioGasto from './FormularioGasto';
 
 const ListaGastos = ({gastos}) => {
+  const [openModal, setModal] = useState(false);
+  const [gastoSelect, setGastoSelect] = useState([]);
+
+  const handlePress = () => {
+    setGastoSelect(gastos);
+    setModal(true);
+  };
+
+  function handleGasto(gasto) {
+    const {nombre, cantidad, categoria, descripcion} = gasto;
+
+    if ([nombre, cantidad, categoria, descripcion].includes('')) {
+      return Alert.alert('Advertencia', 'Rellene todos los campos', [
+        {text: 'Aceptar'},
+      ]);
+    }
+  }
   return (
     <View>
-      <View style={styles.containerCardSalon}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View>
-            <Text
-              style={{
-                color: '#000',
-                fontSize: 15,
-                fontWeight: '600',
-                marginLeft: 12,
-                marginTop: 3,
-              }}>
-              {gastos.nombre}
-            </Text>
-            <Text style={styles.cantidad}>{formatMoney(gastos.cantidad)}</Text>
-            <Text style={styles.fecha}>{formatearFecha(gastos.fecha)} </Text>
-            {gastos.categoria === 'desayuno' ||
-            gastos.categoria === 'almuerzo' ||
-            gastos.categoria === 'cena' ? (
-              <Text style={styles.contador}>
-                Cantidad de platos: {gastos.contador}
+      <TouchableOpacity onPress={handlePress}>
+        <View style={styles.containerCardSalon}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: 15,
+                  fontWeight: '600',
+                  marginLeft: 12,
+                  marginTop: 3,
+                }}>
+                {gastos.nombre}
               </Text>
-            ) : null}
-            {gastos.distancia > 0 && (
-              <Text style={styles.contador}>
-                Distancia recorrida en LPS: {gastos.distancia.toFixed(2)}
+              <Text style={styles.cantidad}>
+                {formatMoney(gastos.cantidad)}
               </Text>
-            )}
-          </View>
+              <Text style={styles.fecha}>{formatearFecha(gastos.fecha)} </Text>
+              {gastos.categoria === 'desayuno' ||
+              gastos.categoria === 'almuerzo' ||
+              gastos.categoria === 'cena' ? (
+                <Text style={styles.contador}>
+                  Cantidad de platos: {gastos.contador}
+                </Text>
+              ) : null}
+              {gastos.distancia > 0 && (
+                <Text style={styles.contador}>
+                  Distancia recorrida en LPS: {gastos.distancia.toFixed(2)}
+                </Text>
+              )}
+            </View>
 
-          <View>
-            <Avatar.Image
-              size={80}
-              style={styles.imagen}
-              source={{uri: 'data:image/jpeg;base64,' + gastos.pic}}
-            />
+            <View>
+              <Avatar.Image
+                size={80}
+                style={styles.imagen}
+                source={{uri: 'data:image/jpeg;base64,' + gastos.pic}}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
+      {openModal && (
+        <Modal
+          animationType="slide"
+          visible={openModal}
+          onRequestClose={() => {
+            setModal(!openModal);
+          }}>
+          <FormularioGasto
+            setModal={setModal}
+            handleGasto={handleGasto}
+            gastoSelect={gastoSelect}
+            setGastoSelect={setGastoSelect}
+          />
+        </Modal>
+      )}
     </View>
   );
 };
