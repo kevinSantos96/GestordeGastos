@@ -55,9 +55,10 @@ export const htmlPDF = (
                 <tbody>
                 
                     
-                    ${gastos.map(
-                      item =>
-                        `<tr>
+                    ${gastos
+                      .map(
+                        item =>
+                          `<tr>
                         <td><span>${item.nombre}</span></td>
                     <td><span data-prefix>${dateFormatShort(
                       item.fecha,
@@ -74,7 +75,9 @@ export const htmlPDF = (
                     )}</span><span></span></td>
                     </tr>
                     `,
-                    )}
+                      )
+                      .flat()
+                      .join('')}
                 
                 </tbody>
               </table>

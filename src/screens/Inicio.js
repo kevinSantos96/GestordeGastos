@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   btnAdd: {
-    backgroundColor: 'rgba(33, 175, 196, 0.5)',
+    backgroundColor: 'rgba(37, 162, 240, 0.4)',
     borderRadius: 50,
     bottom: 10,
     width: 30,

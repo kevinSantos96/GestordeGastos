@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   LogBox,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, StackActions} from '@react-navigation/native';
@@ -78,67 +79,69 @@ const NuevoPresupuesto = ({route}) => {
   return (
     <>
       <View style={styles.contenedor}>
-        <Text style={styles.label}> Definir presupuesto </Text>
+        <ScrollView style={{marginVertical: 25}}>
+          <Text style={styles.label}> Definir presupuesto </Text>
 
-        <View style={{marginVertical: 20}}>
-          <Text style={styles.texto}>Nombre del proyecto:</Text>
-          <TextInput
-            placeholder="Agrega un nombre: Ej. viaje al sur"
-            placeholderTextColor="#666"
-            style={styles.input}
-            value={nombre} //se convierte a presupuesto ya que solo acepta string
-            onChangeText={setNombre}
-          />
-        </View>
-        <View style={{marginBottom: 10}}>
-          <Text style={styles.texto}>Ingrese una cantidad:</Text>
-          <TextInput
-            keyboardType="number-pad"
-            placeholder="Agrega tu presupuesto: Ej. 300"
-            placeholderTextColor="#666"
-            style={styles.input}
-            value={presupuesto.toString()} //se convierte a presupuesto ya que solo acepta string
-            onChangeText={setPresupuesto}
-          />
-        </View>
+          <View style={{marginVertical: 20}}>
+            <Text style={styles.texto}>Nombre del proyecto:</Text>
+            <TextInput
+              placeholder="Agrega un nombre: Ej. viaje al sur"
+              placeholderTextColor="#666"
+              style={styles.input}
+              value={nombre} //se convierte a presupuesto ya que solo acepta string
+              onChangeText={setNombre}
+            />
+          </View>
+          <View style={{marginBottom: 10}}>
+            <Text style={styles.texto}>Ingrese una cantidad:</Text>
+            <TextInput
+              keyboardType="number-pad"
+              placeholder="Agrega tu presupuesto: Ej. 300"
+              placeholderTextColor="#666"
+              style={styles.input}
+              value={presupuesto.toString()} //se convierte a presupuesto ya que solo acepta string
+              onChangeText={setPresupuesto}
+            />
+          </View>
 
-        <View style={{marginVertical: 5, marginHorizontal: 5}}>
-          <DatePiker
-            open={openInit}
-            setOpen={setOpenInit}
-            date={dateInit}
-            setDate={setDateInit}
-            minDate={new Date()}
-          />
-        </View>
-        <Text style={styles.texto}>Fecha de inicio:</Text>
-        <TouchableOpacity
-          style={[styles.boton, styles.btnDate]}
-          onPress={() => setOpenInit(true)}>
-          <Text style={{color: '#000'}}> {formatearFecha(dateInit)}</Text>
-        </TouchableOpacity>
+          <View style={{marginVertical: 5, marginHorizontal: 5}}>
+            <DatePiker
+              open={openInit}
+              setOpen={setOpenInit}
+              date={dateInit}
+              setDate={setDateInit}
+              minDate={new Date()}
+            />
+          </View>
+          <Text style={styles.texto}>Fecha de inicio:</Text>
+          <TouchableOpacity
+            style={[styles.boton, styles.btnDate]}
+            onPress={() => setOpenInit(true)}>
+            <Text style={{color: '#000'}}> {formatearFecha(dateInit)}</Text>
+          </TouchableOpacity>
 
-        <View style={{marginVertical: 5, marginHorizontal: 5}}>
-          <DatePiker
-            open={openEnd}
-            setOpen={setOpenEnd}
-            date={dateEnd}
-            setDate={setDateEnd}
-            minDate={dateInit}
-          />
-        </View>
-        <Text style={styles.texto}>Fecha de finalización:</Text>
-        <TouchableOpacity
-          style={[styles.boton, styles.btnDate]}
-          onPress={() => setOpenEnd(true)}>
-          <Text style={{color: '#000'}}> {formatearFecha(dateEnd)}</Text>
-        </TouchableOpacity>
+          <View style={{marginVertical: 5, marginHorizontal: 5}}>
+            <DatePiker
+              open={openEnd}
+              setOpen={setOpenEnd}
+              date={dateEnd}
+              setDate={setDateEnd}
+              minDate={dateInit}
+            />
+          </View>
+          <Text style={styles.texto}>Fecha de finalización:</Text>
+          <TouchableOpacity
+            style={[styles.boton, styles.btnDate]}
+            onPress={() => setOpenEnd(true)}>
+            <Text style={{color: '#000'}}> {formatearFecha(dateEnd)}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.boton, styles.btnSubmit]}
-          onPress={() => handleNuevoPresupuesto(presupuesto)}>
-          <Text style={styles.textoBoton}> Agregar Presupuesto</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.boton, styles.btnSubmit]}
+            onPress={() => handleNuevoPresupuesto(presupuesto)}>
+            <Text style={styles.textoBoton}> Agregar Presupuesto</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     </>
   );

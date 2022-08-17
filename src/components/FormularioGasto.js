@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   SafeAreaView,
@@ -17,8 +17,14 @@ import BotonCantidad from './botonCantidad';
 import CantidaKm from './cantidaKm';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const FormularioGasto = ({handleGasto, setModal}) => {
+const FormularioGasto = ({
+  handleGasto,
+  setModal,
+  gastoSelect,
+  setGastoSelect,
+}) => {
   const [nombre, setNombre] = useState('');
   const [cantidad, setCantidad] = useState('');
   const [categoria, setCategoria] = useState('');
@@ -27,10 +33,26 @@ const FormularioGasto = ({handleGasto, setModal}) => {
   const [kilometros, setKilometros] = useState(0);
   const [descripcion, setDescripcion] = useState('');
   const [pic, setPic] = useState('');
+  const [idGasto, setIdGasto] = useState('');
+  const [id, setId] = useState('');
+  const [nuevoGasto, setGastos] = useState([]);
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.CENTER);
   };
+
+  useEffect(() => {
+    if (Object.keys(gastoSelect).length > 0) {
+      setIdGasto(gastoSelect.idGasto);
+      setCantidad(gastoSelect.cantidad.toString());
+      setNombre(gastoSelect.nombre);
+      setCategoria(gastoSelect.categoria);
+      setDescripcion(gastoSelect.descripcion);
+      setPic(gastoSelect.pic);
+      setId(gastoSelect.id);
+      setContador(gastoSelect.contador);
+    }
+  }, [gastoSelect]);
 
   const uploadImage = async () => {
     let options = {
@@ -60,7 +82,9 @@ const FormularioGasto = ({handleGasto, setModal}) => {
     kilometros > 0 && (distancia = Number(cantidad) / Number(kilometros));
     const total = Number(cantidad) * contador;
 
-    handleGasto({
+    const values = {
+      id: gastoSelect.id,
+      idGasto,
       nombre,
       cantidad: total,
       categoria,
@@ -69,14 +93,57 @@ const FormularioGasto = ({handleGasto, setModal}) => {
       descripcion,
       pic,
       distancia,
-    });
-    setModal(false);
+    };
+
+    if (idGasto !== '') {
+      const actualizrGasto = async () => {
+        try {
+          const presupuestosStorage = await AsyncStorage.getItem(
+            'planificador',
+          );
+
+          const GastosSet = JSON.parse(presupuestosStorage);
+
+          const gastoActualizado = GastosSet.map(pres =>
+            pres.idGasto === idGasto && pres.id === id ? values : pres,
+          );
+          await AsyncStorage.setItem(
+            'planificador',
+            JSON.stringify(gastoActualizado),
+          );
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      actualizrGasto();
+    } else {
+      handleGasto({
+        nombre,
+        cantidad: total,
+        categoria,
+        fecha,
+        contador,
+        descripcion,
+        pic,
+        distancia,
+      });
+    }
+    handleClose();
   }
 
+  const handleClose = () => {
+    setModal(false);
+    setGastoSelect([]);
+  };
   return (
     <>
       <SafeAreaView style={styles.contenedor}>
         <ScrollView style={styles.scroll}>
+          <TouchableOpacity onPress={handleClose} style={styles.btnEliminar}>
+            <Text style={{color: '#FFF', fontSize: 20, fontWeight: '800'}}>
+              X
+            </Text>
+          </TouchableOpacity>
           <View style={styles.formulario}>
             <Text style={styles.titulo}>Nuevo Gasto</Text>
 
@@ -149,7 +216,7 @@ const FormularioGasto = ({handleGasto, setModal}) => {
                 />
                 <ComboBox.Item
                   label="Otros Gastos Autorizados"
-                  value="otros gastos"
+                  value="otros nuevoGasto"
                 />
               </ComboBox>
             </View>
@@ -182,7 +249,9 @@ const FormularioGasto = ({handleGasto, setModal}) => {
               <Text style={styles.btnsubmitText}>Subir Imagen</Text>
             </TouchableOpacity>
             <Pressable style={styles.btnSubmit} onPress={handleSubmit}>
-              <Text style={styles.btnsubmitText}>Agregar</Text>
+              <Text style={styles.btnsubmitText}>
+                {idGasto ? 'Actualizar' : 'Agregar'}
+              </Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -209,7 +278,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   btnEliminar: {
-    backgroundColor: '#FF3B40',
+    position: 'relative',
+    left: 5,
   },
   btnCancelar: {
     backgroundColor: '#DB4641',

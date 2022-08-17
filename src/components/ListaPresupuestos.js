@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, Image, Text, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PresupuestoList from './PresupuestoList';
@@ -26,9 +26,9 @@ const ListaPresupuestos = ({presupuestos, setPresupuestos}) => {
             <FlatList
               data={presupuestos}
               style={{marginBottom: 20}}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index}
               renderItem={({item}) => {
-                return <PresupuestoList item={item} />;
+                return item !== '' && <PresupuestoList item={item} />;
               }}
             />
           ) : (

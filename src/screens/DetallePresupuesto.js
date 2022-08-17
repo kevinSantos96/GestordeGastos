@@ -25,6 +25,7 @@ const DetallePresupuesto = ({route}) => {
   const [porcentaje, setPorcentaje] = useState(0);
   const [modal, setModal] = useState(false); //activar el modal con el boton
   const [totalGastos, setTotalGastos] = useState(0);
+  const [gastoSelect, setGastoSelect] = useState([]);
 
   useEffect(() => {
     const obtenerPresupuestos = async () => {
@@ -85,6 +86,8 @@ const DetallePresupuesto = ({route}) => {
     <View style={{flex: 1}}>
       <ScrollView style={{marginBottom: 50}}>
         <View style={styles.header}>
+          <View style={{alignItems: 'center', marginTop: 12}}></View>
+
           <View style={styles.contenedor}>
             <View style={styles.centrarGrap}>
               <CircularProgress
@@ -160,7 +163,12 @@ const DetallePresupuesto = ({route}) => {
           onRequestClose={() => {
             setModal(!modal);
           }}>
-          <FormularioGasto setModal={setModal} handleGasto={handleGasto} />
+          <FormularioGasto
+            setModal={setModal}
+            handleGasto={handleGasto}
+            gastoSelect={gastoSelect}
+            setGastoSelect={setGastoSelect}
+          />
         </Modal>
       )}
     </View>
@@ -172,7 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     marginHorizontal: 10,
     borderRadius: 12,
-    paddingVertical: 30,
+    paddingVertical: 20,
     paddingHorizontal: 15,
     transform: [{translateY: 50}],
     shadowColor: '#000',
@@ -193,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnAdd: {
-    backgroundColor: '#21AFC5',
+    backgroundColor: 'rgba(37, 162, 240, 0.4)',
     opacity: 20,
     borderRadius: 50,
     bottom: 10,
@@ -202,6 +210,21 @@ const styles = StyleSheet.create({
     padding: 30,
     right: 15,
     position: 'absolute',
+  },
+  btnDelete: {
+    alignItems: 'center',
+    backgroundColor: '#FC2621',
+    width: 120,
+    lineHeight: 3,
+    color: '#FFF',
+    borderRadius: 12,
+    padding: 5,
+    marginHorizontal: 6,
+  },
+  textButtonDelete: {
+    fontSize: 18,
+    textTransform: 'uppercase',
+    fontWeight: '500',
   },
 });
 export default DetallePresupuesto;
